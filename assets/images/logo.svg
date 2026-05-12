@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="60" viewBox="0 0 200 60">
+  <rect width="200" height="60" fill="#003366" rx="4"/>
+  <text x="16" y="36" font-family="Arial,sans-serif" font-size="14" font-weight="bold" fill="white">HGR de Panzi</text>
+  <text x="16" y="50" font-family="Arial,sans-serif" font-size="9" fill="rgba(255,255,255,0.7)">Service Technique — Réseau VDI</text>
+  <rect x="170" y="12" width="20" height="36" rx="4" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+  <line x1="180" y1="20" x2="180" y2="24" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+  <line x1="180" y1="30" x2="180" y2="42" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+</svg>
