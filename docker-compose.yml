@@ -57,4 +57,6 @@ volumes:
 
 networks:
   testing-network:
-    name: testing-reseau-network
+    name: testing-reseau-networ
+  ports:
+      - '9099:80'
