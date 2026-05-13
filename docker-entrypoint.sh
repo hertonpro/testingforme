@@ -129,6 +129,33 @@ php -r "
             FOREIGN KEY (test_id) REFERENCES tests(id) ON DELETE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci');
 
+        // Chantiers
+        \$pdo->exec('CREATE TABLE IF NOT EXISTS chantiers (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nom VARCHAR(255) NOT NULL,
+            description TEXT DEFAULT NULL,
+            adresse VARCHAR(500) DEFAULT NULL,
+            statut ENUM(\"actif\", \"termine\", \"suspendu\") NOT NULL DEFAULT \"actif\",
+            created_by INT DEFAULT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci');
+
+        \$pdo->exec('CREATE TABLE IF NOT EXISTS chantier_techniciens (
+            chantier_id INT NOT NULL,
+            user_id INT NOT NULL,
+            assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (chantier_id, user_id),
+            FOREIGN KEY (chantier_id) REFERENCES chantiers(id) ON DELETE CASCADE,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci');
+
+        // Ajout chantier_id dans tests
+        try {
+            \$pdo->exec('ALTER TABLE tests ADD COLUMN chantier_id INT DEFAULT NULL AFTER id');
+        } catch (Exception \$e) {}
+
         // Index
         \$pdo->exec('CREATE INDEX idx_tests_site ON tests(site)');
         \$pdo->exec('CREATE INDEX idx_tests_liaison_id ON tests(liaison_id)');

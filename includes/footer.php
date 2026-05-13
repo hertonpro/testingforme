@@ -11,9 +11,9 @@
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 <span>Nouveau</span>
             </a>
-            <a href="index.php?page=test_list" class="bottom-nav__link <?= ($_GET['page'] ?? '') === 'test_list' ? 'active' : '' ?>">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-                <span>Tests</span>
+            <a href="index.php?page=chantier_list" class="bottom-nav__link <?= in_array($_GET['page'] ?? '', ['chantier_list','chantier_detail','chantier_form']) ? 'active' : '' ?>">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                <span>Chantiers</span>
             </a>
         </nav>
         <?php endif; ?>

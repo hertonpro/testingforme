@@ -66,9 +66,14 @@ require_once __DIR__ . '/../includes/header.php';
         <h1 class="page-title">Utilisateurs</h1>
         <p class="page-desc"><?= count($users) ?> utilisateur(s)</p>
     </div>
-    <button class="btn btn--primary" onclick="document.getElementById('userForm').classList.toggle('open')">
+    <button class="btn btn--primary" onclick="
+        var form = document.getElementById('userForm');
+        var open = form.style.display !== 'none';
+        form.style.display = open ? 'none' : 'block';
+        this.textContent = open ? 'Ajouter' : 'Fermer';
+    ">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Ajouter
+        <span>Ajouter</span>
     </button>
 </div>
 
@@ -99,6 +104,7 @@ require_once __DIR__ . '/../includes/header.php';
                     <label class="form-label">Rôle</label>
                     <select name="role" class="form-input">
                         <option value="technicien">Technicien</option>
+                        <option value="superviseur">Superviseur</option>
                         <option value="administrateur">Administrateur</option>
                     </select>
                 </div>
@@ -163,16 +169,5 @@ require_once __DIR__ . '/../includes/header.php';
 .user-item__right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .btn--sm { padding: 4px 10px; font-size: 0.75rem; }
 </style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var btn = document.querySelector('[data-toggle="userForm"]');
-    if (!btn) return;
-    btn.addEventListener('click', function() {
-        var form = document.getElementById('userForm');
-        form.style.display = form.style.display === 'none' ? 'block' : 'none';
-    });
-});
-</script>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

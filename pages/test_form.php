@@ -27,6 +27,7 @@ if (isPost()) {
 
     // Section 1: Identification
     $testData['site'] = $data['site'] ?? APP_SITE_DEFAULT;
+    $testData['chantier_id'] = !empty($data['chantier_id']) ? (int)$data['chantier_id'] : null;
     $testData['batiment'] = $data['batiment'] ?? '';
     $testData['service'] = $data['service'] ?? '';
     $testData['localisation_a'] = $data['localisation_a'] ?? '';
@@ -147,8 +148,18 @@ require_once __DIR__ . '/../includes/header.php';
                     <input type="text" name="site" id="site" class="form-input" value="<?= h($test['site'] ?? APP_SITE_DEFAULT) ?>" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label" for="batiment">Bâtiment</label>
-                    <input type="text" name="batiment" id="batiment" class="form-input" value="<?= h($test['batiment'] ?? '') ?>" placeholder="Ex: Bâtiment A" required>
+                    <label class="form-label" for="chantier_id">Chantier</label>
+                    <select name="chantier_id" id="chantier_id" class="form-input">
+                        <option value="">— Aucun —</option>
+                        <?php
+                        $chantiers = Database::query("SELECT id, nom, statut FROM chantiers ORDER BY nom")->fetchAll();
+                        $selectedChantier = (int)($test['chantier_id'] ?? $_GET['chantier_id'] ?? 0);
+                        foreach ($chantiers as $c): ?>
+                        <option value="<?= $c['id'] ?>" <?= $selectedChantier === (int)$c['id'] ? 'selected' : '' ?>>
+                            <?= h($c['nom']) ?> (<?= h($c['statut']) ?>)
+                        </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
             </div>
             <div class="form-row">
