@@ -1,15 +1,9 @@
-# Docker
-Dockerfile
-docker-compose.yml
-.dockerignore
+# N'EXCLUEZ PAS docker-entrypoint.sh — il est copié dans l'image !
+# Seulement ce qui est inutile dans le contexte de build :
 
-# Dépendances
+# Dépendances (re-générées dans le Dockerfile)
 vendor/
 node_modules/
-
-# Uploads (volumes docker)
-uploads/photos/*
-!uploads/photos/.gitkeep
 
 # OS
 .DS_Store
