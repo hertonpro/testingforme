@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: testing-reseau-app
+    ports:
+      - "80:80"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=testing_reseau
+      - DB_USER=testing_user
+      - DB_PASS=${DB_PASSWORD:-testing_pass_secure}
+      - APP_ENV=production
+      - APP_URL=http://localhost
+      - TZ=Africa/Kinshasa
+    volumes:
+      - uploads_data:/var/www/html/uploads
+      - logo_data:/var/www/html/assets/images
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - testing-network
+
+  db:
+    image: mariadb:10.11
+    container_name: testing-reseau-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-root_password_secure}
+      - MYSQL_DATABASE=testing_reseau
+      - MYSQL_USER=testing_user
+      - MYSQL_PASSWORD=${DB_PASSWORD:-testing_pass_secure}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - testing-network
+
+volumes:
+  mysql_data:
+    name: testing-reseau-mysql-data
+  uploads_data:
+    name: testing-reseau-uploads
+  logo_data:
+    name: testing-reseau-logo
+
+networks:
+  testing-network:
+    name: testing-reseau-network

@@ -26,7 +26,7 @@ if (isPost()) {
     $testData = [];
 
     // Section 1: Identification
-    $testData['site'] = $data['site'] ?? 'HGR de Panzi';
+    $testData['site'] = $data['site'] ?? APP_SITE_DEFAULT;
     $testData['batiment'] = $data['batiment'] ?? '';
     $testData['service'] = $data['service'] ?? '';
     $testData['localisation_a'] = $data['localisation_a'] ?? '';
@@ -88,8 +88,6 @@ if (isPost()) {
     $testData['validation'] = $data['validation'] ?? 'en_attente';
 
     if ($isEdit) {
-        $testData['id'] = $testId;
-        // Remove id from data for update
         Test::update($testId, $testData);
         flash('success', 'Test mis à jour avec succès.');
 
@@ -146,7 +144,7 @@ require_once __DIR__ . '/../includes/header.php';
             <div class="form-row">
                 <div class="form-group">
                     <label class="form-label" for="site">Site</label>
-                    <input type="text" name="site" id="site" class="form-input" value="<?= h($test['site'] ?? 'HGR de Panzi') ?>" required>
+                    <input type="text" name="site" id="site" class="form-input" value="<?= h($test['site'] ?? APP_SITE_DEFAULT) ?>" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="batiment">Bâtiment</label>

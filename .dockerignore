@@ -1,0 +1,29 @@
+# Docker
+Dockerfile
+docker-compose.yml
+docker-entrypoint.sh
+.dockerignore
+
+# Dépendances
+vendor/
+node_modules/
+
+# Uploads (volumes docker)
+uploads/photos/*
+!uploads/photos/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Logs
+*.log
+
+# Env
+.env

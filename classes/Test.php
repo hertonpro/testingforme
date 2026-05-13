@@ -27,16 +27,23 @@ class Test
      */
     public static function update(int $id, array $data): bool
     {
+        // Exclure 'id' des colonnes à mettre à jour
+        unset($data['id'], $data[':id']);
+
         $sets = [];
         foreach ($data as $key => $value) {
             $sets[] = "{$key} = :{$key}";
         }
 
         $sql = 'UPDATE tests SET ' . implode(', ', $sets) . ' WHERE id = :id';
-        $data[':id'] = $id;
 
         $stmt = Database::prepare($sql);
-        return $stmt->execute($data);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(':' . $key, $value);
+        }
+
+        return $stmt->execute();
     }
 
     /**

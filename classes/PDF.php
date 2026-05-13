@@ -8,14 +8,16 @@ require_once BASE_PATH . 'vendor/tecnickcom/tcpdf/tcpdf.php';
 
 class PDF extends TCPDF
 {
-    private string $siteName = 'HGR de Panzi';
+    private string $siteName;
 
     public function __construct()
     {
         parent::__construct('P', 'mm', 'A4', true, 'UTF-8', false);
 
-        $this->SetCreator('Testing Réseau VDI');
-        $this->SetAuthor('HGR Panzi - Service Technique');
+        $this->siteName = defined('APP_ORG') ? APP_ORG : 'HGR de Panzi';
+
+        $this->SetCreator(defined('APP_NAME') ? APP_NAME : 'Testing Réseau VDI');
+        $this->SetAuthor($this->siteName . ' - Service Technique');
         $this->SetTitle('Rapport de Test Réseau');
         $this->SetSubject('Fiche de Test Unitaire - Liaison Réseau VDI');
 
@@ -46,14 +48,14 @@ class PDF extends TCPDF
         // Titre
         $this->SetFont('helvetica', 'B', 12);
         $this->SetXY(45, 8);
-        $this->Cell(0, 6, 'HGR de Panzi', 0, 1, 'L');
+        $this->Cell(0, 6, defined('APP_ORG') ? APP_ORG : 'HGR de Panzi', 0, 1, 'L');
 
         $this->SetFont('helvetica', '', 9);
         $this->SetXY(45, 14);
-        $this->Cell(0, 5, 'Service Technique - Réseau VDI', 0, 1, 'L');
+        $this->Cell(0, 5, defined('APP_ORG_SUBTITLE') ? APP_ORG_SUBTITLE : 'Service Technique - Réseau VDI', 0, 1, 'L');
 
         $this->SetXY(45, 19);
-        $this->Cell(0, 5, 'FICHE DE TEST UNITAIRE - LIAISON RÉSEAU', 0, 1, 'L');
+        $this->Cell(0, 5, defined('APP_DOC_TITLE') ? APP_DOC_TITLE : "FICHE DE TEST UNITAIRE - LIAISON RÉSEAU", 0, 1, 'L');
 
         // Numéro de page
         $this->SetFont('helvetica', 'I', 8);
@@ -72,7 +74,9 @@ class PDF extends TCPDF
         $this->SetFont('helvetica', 'I', 7);
         $this->SetTextColor(100, 100, 100);
 
-        $this->Cell(0, 5, 'HGR de Panzi - Service Technique - Document officiel - Généré le ' . date('d/m/Y H:i'), 0, 0, 'C');
+        $org = defined('APP_ORG') ? APP_ORG : 'HGR de Panzi';
+        $subtitle = defined('APP_ORG_SUBTITLE') ? APP_ORG_SUBTITLE : 'Service Technique';
+        $this->Cell(0, 5, $org . ' - ' . $subtitle . ' - Document officiel - Généré le ' . date('d/m/Y H:i'), 0, 0, 'C');
 
         // Ligne
         $this->SetDrawColor(0, 51, 102);
@@ -133,7 +137,7 @@ class PDF extends TCPDF
     private function buildIdentification(array $t): void
     {
         $this->sectionTitle('1. IDENTIFICATION DE LA LIAISON');
-        $this->fieldRow('Site', $t['site'] ?? 'HGR de Panzi');
+        $this->fieldRow('Site', $t['site'] ?? (defined('APP_SITE_DEFAULT') ? APP_SITE_DEFAULT : 'HGR de Panzi'));
         $this->fieldRow('Bâtiment', $t['batiment'] ?? '-');
         $this->fieldRow('Service', $t['service'] ?? '-');
         $this->fieldRow('Localisation point A (Patch Panel)', $t['localisation_a'] ?? '-');
@@ -250,19 +254,47 @@ class PDF extends TCPDF
 
         $this->sectionTitle('10. DOCUMENTATION PHOTOGRAPHIQUE');
 
+        $margin = $this->lMargin;
+        $pageW = $this->getPageWidth() - $this->lMargin - $this->rMargin;
+        $maxImgW = min(150, $pageW); // largeur max image en mm
+
         foreach ($photos as $photo) {
             $filePath = BASE_PATH . $photo['chemin_image'];
-            if (file_exists($filePath)) {
-                // Image width max 80mm
-                $this->Image($filePath, 15, $this->GetY(), 80);
+            if (!file_exists($filePath)) continue;
 
-                if (!empty($photo['description'])) {
-                    $this->SetFont('helvetica', 'I', 8);
-                    $this->SetX(100);
-                    $this->MultiCell(90, 5, $photo['description'], 0, 'L');
-                }
+            // Obtenir dimensions réelles
+            list($w, $h) = getimagesize($filePath);
+            if (!$w || !$h) continue;
 
-                $this->Ln(5);
+            // Calculer les dimensions d'affichage
+            $ratio = min($maxImgW / $w, 1);
+            $imgW = $w * $ratio;
+            $imgH = $h * $ratio;
+
+            // Vérifier la place disponible, nouvelle page si nécessaire
+            $spaceNeeded = $imgH + 15;
+            if ($this->GetY() + $spaceNeeded > $this->getPageHeight() - $this->bMargin) {
+                $this->AddPage();
+            }
+
+            // Centrer horizontalement
+            $x = $margin + ($pageW - $imgW) / 2;
+            $yBefore = $this->GetY();
+
+            // Placer l'image
+            $this->Image($filePath, $x, $yBefore, $imgW, $imgH);
+
+            // Avancer Y après l'image
+            $this->SetY($yBefore + $imgH + 4);
+
+            // Description sous l'image
+            if (!empty(trim($photo['description'] ?? ''))) {
+                $this->SetFont('helvetica', 'I', 8);
+                $this->SetTextColor(100, 100, 100);
+                $this->SetX($margin + 5);
+                $this->MultiCell($pageW - 10, 4, $photo['description'], 0, 'C');
+                $this->SetTextColor(0, 0, 0);
+                $this->Ln(2);
             }
         }
         $this->Ln(3);

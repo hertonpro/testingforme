@@ -27,5 +27,11 @@ define('SESSION_NAME', 'TESTING_RESEAU_SID');
 // Pagination
 define('ITEMS_PER_PAGE', 15);
 
+// Informations personnalisables
+define('APP_ORG', 'Herton.pro');
+define('APP_ORG_SUBTITLE', 'Câblage VDI et Câblage Wifi');
+define('APP_DOC_TITLE', 'FICHE DE TEST UNITAIRE — LIAISON RÉSEAU');
+define('APP_SITE_DEFAULT', 'HGR de Panzi');
+
 // Date
-date_default_timezone_set('Africa/Kinshasa');
+date_default_timezone_set('Africa/Lubumbashi');

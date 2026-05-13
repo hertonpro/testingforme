@@ -29,8 +29,8 @@ require_once __DIR__ . '/../includes/header.php';
             <div class="auth__logo">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="1.5"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
             </div>
-            <h1 class="auth__title">Testing Réseau VDI</h1>
-            <p class="auth__subtitle">HGR de Panzi — Service Technique</p>
+            <h1 class="auth__title"><?= h(APP_NAME) ?></h1>
+            <p class="auth__subtitle"><?= h(APP_ORG) ?></p>
         </div>
 
         <?php if ($error): ?>

@@ -129,7 +129,7 @@ class Photo
         if (!$srcImage) return false;
 
         // Redimensionner
-        $dstImage = imagecreattruecolor($newWidth, $newHeight);
+        $dstImage = imagecreatetruecolor($newWidth, $newHeight);
         imagefill($dstImage, 0, 0, imagecolorallocate($dstImage, 255, 255, 255));
         imagecopyresampled($dstImage, $srcImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
 
