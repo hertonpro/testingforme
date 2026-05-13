@@ -5,7 +5,7 @@ services:
     build: .
     container_name: testing-reseau-app
     ports:
-      - "80:80"
+      - "9099:80"
     environment:
       - DB_HOST=db
       - DB_PORT=3306
@@ -13,7 +13,7 @@ services:
       - DB_USER=testing_user
       - DB_PASS=${DB_PASSWORD:-testing_pass_secure}
       - APP_ENV=production
-      - APP_URL=http://localhost
+      - APP_URL=0.0.0.0:9099
       - TZ=Africa/Kinshasa
     volumes:
       - uploads_data:/var/www/html/uploads
@@ -58,5 +58,3 @@ volumes:
 networks:
   testing-network:
     name: testing-reseau-networ
-  ports:
-      - '9099:3000'
